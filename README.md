@@ -16,7 +16,8 @@
 
 > *	dlete: https://fgtr38y6wj.execute-api.us-east-1.amazonaws.com/people/id
 
->> {id,
+## Input Required
+> {id,
     name,
     gender}
 
