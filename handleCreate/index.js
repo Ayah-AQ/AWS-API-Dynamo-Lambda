@@ -1,0 +1,41 @@
+const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
+const { DynamoDBDocumentClient } = require('@aws-sdk/lib-dynamodb');
+
+let client = new DynamoDBClient({});
+let dynamo = DynamoDBDocumentClient.from(client);
+let table = 'awsdb';
+
+const peopleSchema = new dynamoose.Schema({
+    id: String,
+    name: String,
+    gender: String
+});
+const person = dynamoose.model('awsdb', peopleSchema);
+
+exports.handler = async function(event, context) {
+    
+    let request = event.routeKey;
+    let statusCode = 200;
+    let body; 
+    let headers = {
+        'Content-Type': 'application/json'
+    }; 
+    try {
+        let obj = JSON.parse(event.body);
+        if (request === 'POST /people') {
+            let newUser = await person.create(obj);
+        }
+        body = obj;
+    } catch(err) {
+        body = err.message;
+        statusCode = 400;
+    } finally{
+        body = JSON.stringify(body);
+    }
+    console.log(body);
+    return {
+        body,
+        statusCode,
+        headers
+    };
+};
